@@ -24,7 +24,8 @@ export const runFaucet = async (project: string, options: FaucetOptions) => {
         arg1: string,
         args: string[],
         tokenMapArrays: string[],
-        execInterval: number
+        execInterval: number,
+        roundIntervalHours: number
     }>
     const faucetInfo = faucets[project]
     if (!faucetInfo) {
@@ -32,11 +33,13 @@ export const runFaucet = async (project: string, options: FaucetOptions) => {
     }
     const {
         name, serverId, channelId, type,
-        cycle, arg1, args, tokenMapArrays, execInterval
+        cycle, arg1, args, tokenMapArrays, execInterval, roundIntervalHours
     } = faucetInfo
+
     function sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+
     // const {token, account, headless} = options
     // const puppet = new Puppet(PuppetOptions(token, headless))
     // await puppet.start()
@@ -47,27 +50,35 @@ export const runFaucet = async (project: string, options: FaucetOptions) => {
         //     puppet.sendMessage(arg1 + ' ' + account)
         // }, cycle * 1000)
 
+
         // 支持bbl
         if (name === "bbl") {
-            for (let tokenStr of tokenMapArrays) {
-                try {
-                    let tokenArr = tokenStr.split("=");
-                    let tmpToken = tokenArr[0]
-                    let bblAddress = tokenArr[1]
+            async function runCommands() {
+                for (let tokenStr of tokenMapArrays) {
+                    try {
+                        let tokenArr = tokenStr.split("=");
+                        let tmpToken = tokenArr[0]
+                        let bblAddress = tokenArr[1]
 
-                    console.log(`[use token]: ${tmpToken} `, new Date())
-                    const puppet = new Puppet(PuppetOptions(tmpToken, true))
-                    await puppet.start()
-                    await puppet.goToChannel(serverId, channelId)
-                    await puppet.sendCommand(arg1, bblAddress);
-                    await puppet.closeBrowser()
+                        console.log(`[use token]: ${tmpToken} `, new Date())
+                        const puppet = new Puppet(PuppetOptions(tmpToken, true))
+                        await puppet.start()
+                        await puppet.goToChannel(serverId, channelId)
+                        await puppet.sendCommand(arg1, bblAddress);
+                        await puppet.closeBrowser()
 
-                    console.log(`[execInterval]: next execution will be in ${execInterval} ms.....`)
-                    await sleep(execInterval);
-                } catch (err) {
-                    console.error(err)
+                        console.log(`[execInterval]: next execution will be in ${execInterval / 1000} s.....`)
+                        await sleep(execInterval);
+                    } catch (err) {
+                        console.error(err)
+                    }
                 }
+                console.log(`Waiting for next round in ${roundIntervalHours} hours...`);
+                await sleep(roundIntervalHours * 60 * 60 * 1000);
+                runCommands();
             }
+
+            await runCommands();
         }
 
     } /*else {

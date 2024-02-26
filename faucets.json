@@ -24,6 +24,7 @@
     "cycle": 86400,
     "arg1": "!faucet",
     "execInterval": 30000,
+    "roundIntervalHours": 6,
     "tokenMapArrays": [
       "[discord的token]=[bbl的地址]"
     ]
