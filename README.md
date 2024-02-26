@@ -31,4 +31,5 @@ tokenMapArrays：[
 2: 启动命令：yarn cli faucet babylon_auto
 
 目前bbl的dc领水是6小时一次，理论上一天能领4次。
+
 ```
