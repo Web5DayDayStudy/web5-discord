@@ -21,16 +21,19 @@ yarn cli faucet [project] -t [discord-token] -a [wallet-address]
 首先感谢开源分享。在原作者的基础上改了bbl的批量领水
 ```angular2html
 使用方式：
-1: 配置好 faucets.json ，其中
-execInterval：30000 // 时间间隔，每一次发送命令后的下个号的发送间隔时间
-tokenMapArrays：[
+1: 配置好faucets.json其中:
+execInterval: 30000 // 时间间隔，每一次发送命令后的下个号的发送间隔时间
+
+tokenMapArrays: [
     "token1=address1",
     "token2=address2"   // 领水的discord token 中间以=分割 bbl的地址
 ]
 
+roundIntervalHours: 6 // 领水调度的时间间隔，单位是小时
+
 2: 启动命令：yarn cli faucet babylon_auto
 
-目前bbl的dc领水是6小时一次，理论上一天能领4次。
+目前bbl的dc领水是6小时一次，理论上一天能领3-4次。注意间隔时间不要太短，会触发dc的频率检测。
 
 
 ** 
