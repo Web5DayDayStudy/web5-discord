@@ -2,7 +2,6 @@ import Puppet from "../puppet"
 import {sayFaucetLog} from "../utils/promots"
 import {readFile} from "fs/promises"
 import PuppetOptions from "../utils/PuppetOptions";
-import * as trace_events from "trace_events";
 
 interface FaucetOptions {
     token: string,
@@ -24,7 +23,9 @@ export const runFaucet = async (project: string, options: FaucetOptions) => {
         arg1: string,
         args: string[],
         tokenMapArrays: string[],
-        execInterval: number
+        execInterval: number,
+        tokens: string[],
+        address: string[]
     }>
     const faucetInfo = faucets[project]
     if (!faucetInfo) {
@@ -33,10 +34,13 @@ export const runFaucet = async (project: string, options: FaucetOptions) => {
     const {
         name, serverId, channelId, type,
         cycle, arg1, args, tokenMapArrays, execInterval
+        , tokens, address
     } = faucetInfo
+
     function sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+
     // const {token, account, headless} = options
     // const puppet = new Puppet(PuppetOptions(token, headless))
     // await puppet.start()
@@ -64,6 +68,26 @@ export const runFaucet = async (project: string, options: FaucetOptions) => {
 
                     console.log(`[execInterval]: next execution will be in ${execInterval} ms.....`)
                     await sleep(execInterval);
+                } catch (err) {
+                    console.error(err)
+                }
+            }
+        }
+
+        if (name === "bbl_sbtc") {
+            for (let i = 0; i < tokens.length; i++) {
+                try {
+                    if (i >= address.length) {
+                        continue;
+                    }
+                    let token = tokens[i]
+                    let addr = address[i]
+                    console.log(`[use token]: ${token} `, new Date())
+                    const puppet = new Puppet(PuppetOptions(token, true))
+                    await puppet.start()
+                    await puppet.goToChannel(serverId, channelId)
+                    await puppet.sendCommand(arg1, addr);
+                    await puppet.closeBrowser()
                 } catch (err) {
                     console.error(err)
                 }

@@ -32,4 +32,8 @@ tokenMapArrays：[
 
 目前bbl的dc领水是6小时一次，理论上一天能领4次。
 
+
+** 
+新增sbtc领水，配置好faucets.json的tokens与address，
+然后命令：yarn cli faucet babylon_sbtc 启动
 ```

@@ -24,8 +24,20 @@
     "cycle": 86400,
     "arg1": "!faucet",
     "execInterval": 30000,
-    "tokenMapArrays": [
-      "[discord的token]=[bbl的地址]"
+    "tokenMapArrays": []
+  },
+  "babylon_sbtc": {
+    "name": "bbl_sbtc",
+    "serverId": "1046686458070700112",
+    "channelId": "1212398536256393227",
+    "type": "msg",
+    "cycle": 86400,
+    "arg1": "!faucet",
+    "tokens": [
+      "token1"
+    ],
+    "address": [
+      "sbtcAddress"
     ]
   }
 }
