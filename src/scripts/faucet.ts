@@ -35,11 +35,14 @@ export const runFaucet = async (project: string, options: FaucetOptions) => {
     const {
         name, serverId, channelId, type,
         cycle, arg1, args, tokenMapArrays, execInterval
+        , roundIntervalHours
         , tokens, address
     } = faucetInfo
+
     function sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+
     // const {token, account, headless} = options
     // const puppet = new Puppet(PuppetOptions(token, headless))
     // await puppet.start()
